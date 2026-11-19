@@ -33,7 +33,7 @@ At the prompt of a terminal session:
 /plugin install selection-tint --marketplace csimonson62/selection-tint
 ```
 
-Answer `y` to add the marketplace, choose a scope, then choose a tint color.
+Answer `y` to add the marketplace, choose a scope, then choose a tint color and mode. You can change both later with `/tint`.
 
 From a shell:
 
@@ -41,7 +41,7 @@ From a shell:
 claude plugin install selection-tint --marketplace csimonson62/selection-tint
 ```
 
-In the desktop app: click **+** next to the prompt box, then **Plugins**. Add the marketplace `csimonson62/selection-tint`, then add the plugin.
+In the desktop app, where `/plugin` does not run: click **+** next to the prompt box, then **Plugins**. Add the marketplace `csimonson62/selection-tint`, then add the plugin. Then type `/tint` to pick a color and mode.
 
 ## Colors
 
@@ -65,11 +65,36 @@ Each color passes the desktop app's own contrast check, so the app paints it.
 - Some small status colors (the warning fill, git status labels, green "success" text) have lower contrast on tinted backgrounds than on the app's stock ones. They still paint.
 - The selected row's strength is fixed by the app: 10% in light mode, 15% in dark mode. A mod can change the color behind it, not the strength.
 
-## Change the color
+## Change the color or mode
 
-Open the config menu (`/config` in a terminal session) and set **Tint color**. The mod reloads with the new color.
+### In the desktop app or a terminal
 
-To add a color of your own, add an entry to `TINTS` in `hooks/register.ts` and its name to the `options` list in `.claude-plugin/plugin.json`. Each entry needs three pale light-mode shades, four deep dark-mode shades, and three dark-mode text colors, all six-digit hex, darkest shade first. Check it with `checkColors` from `hooks/make-colors.js`: a line that starts `Desktop won't paint this theme` means the app ignores the whole theme.
+Type `/tint` in the message box and press Enter. A small panel opens with two dropdowns:
+
+- **Color:** one of the eight colors above.
+- **Mode:** **System** follows the app's own light/dark setting. **Light** or **Dark** keeps the app in that mode.
+
+A pick applies at once and is kept for new sessions. Press Esc to close the panel.
+
+### In a terminal, with the config menu
+
+Run `claude`, type `/config`, and set **Tint color** and **Mode**. The desktop app's message box does not open `/config`, so use `/tint` there.
+
+### In the settings file
+
+Open `~/.claude/settings.json` (on Windows, `C:\Users\<you>\.claude\settings.json`) and add:
+
+```json
+"pluginConfigs": {
+  "selection-tint": { "options": { "color": "pink", "mode": "system" } }
+}
+```
+
+`color` is one of the eight names above. `mode` is `system`, `light` or `dark`. The change takes effect in the next session.
+
+### Add a color of your own
+
+Add an entry to `TINTS` in `hooks/register.tsx` and its name to the `options` list in `.claude-plugin/plugin.json`. Each entry needs three pale light-mode shades, four deep dark-mode shades, and three dark-mode text colors, all six-digit hex, darkest shade first. Check it with `checkColors` from `hooks/make-colors.js`: a line that starts `Desktop won't paint this theme` means the app ignores the whole theme.
 
 `hooks/make-colors.js` and `hooks/make-colors.d.ts` are generated from the app's design system. Do not edit them.
 
