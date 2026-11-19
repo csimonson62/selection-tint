@@ -1,29 +1,27 @@
 # selection-tint
 
-A Claude Code mod for the Claude desktop app. It replaces the gray selected-session row in the sidebar with a color, so you can see which session is open. Choose from eight colors. It works in light mode and dark mode, and looks best in light mode.
+A Claude Code mod for the Claude desktop app. It tints the app in one of eight colors, in light mode and dark mode, so the selected session row in the sidebar takes that color instead of plain gray.
 
-**This is a whole-app theme, not only a row highlight.** The app has no separate color for the selected row, so the mod changes the colors the row is made from. Read "What it changes" before you install.
+**This is a whole-app theme, not only a row highlight.** The app has no separate color for the selected row, so the mod tints the backgrounds the row sits on. Read "What it changes" before you install.
 
 ## What it changes
 
+The app paints the selected row as a translucent wash over the sidebar: 10% black in light mode, 15% near-white in dark mode. That wash color is also the body text color, so tinting it would color the text. Instead, the mod tints the backgrounds behind the wash. The row keeps the app's own wash and takes its hue from the background.
+
 ### Light mode
 
-The app paints the selected row as a 10% black wash over the sidebar. The mod tints the surfaces behind it.
-
-- The page, cards, and panels turn a pale version of your color, across the whole app.
-- The selected sidebar row becomes a deeper shade of the same color.
+- The page, cards, and panels turn a pale version of your color.
+- The selected sidebar row is a deeper shade of the same color.
 - Text and solid buttons stay black.
 
 ### Dark mode
 
-The app paints the selected row as a 15% wash of one light gray. The mod changes that gray to your color.
+- The page, cards, panels, and menus turn a deep version of your color.
+- The selected sidebar row is a lighter shade of the same color.
+- Text is near-white with a slight cast of the color. Solid buttons stay near-white.
+- Borders and toggle switches keep the app's own strength.
 
-- The selected sidebar row gets a dark, muted tint of your color.
-- Hover fills and borders get a fainter tint.
-- Solid neutral buttons take the full color.
-- Backgrounds and body text keep the app's own colors.
-
-The row tint in dark mode is subtle. The app fixes its strength at 15%, and a mod cannot raise it.
+Greenish colors (`cyan`, `teal`, `mint`, `lime`, `yellow`) run less saturated in dark mode, so green "success" text stays readable on them.
 
 The terminal and editor extensions do not draw themes, so the mod has no effect there.
 
@@ -47,29 +45,29 @@ In the desktop app: click **+** next to the prompt box, then **Plugins**. Add th
 
 ## Colors
 
-| Name | Dark mode tint | Light mode page | Dark mode borders |
-| --- | --- | --- | --- |
-| `cyan` (default) | `#7df9ff` | `#d4f1f5` | Same strength as the app's |
-| `teal` | `#5ef2d6` | `#d4f5ee` | Same strength as the app's |
-| `mint` | `#8dffb0` | `#d4f5df` | Same strength as the app's |
-| `lime` | `#c8ff5e` | `#eaf5d4` | Same strength as the app's |
-| `yellow` | `#ffd866` | `#f5eed4` | Same strength as the app's |
-| `pink` | `#ff4da6` | `#f6d3e2` | Fainter |
-| `lavender` | `#d9c2ff` | `#e1d4f5` | Slightly fainter |
-| `sky` | `#9ad4ff` | `#d4e7f5` | Slightly fainter |
+| Name | Light mode page | Dark mode page |
+| --- | --- | --- |
+| `cyan` (default) | `#d4f1f5` | `#142b2e` |
+| `teal` | `#d4f5ee` | `#152824` |
+| `mint` | `#d4f5df` | `#142e1d` |
+| `lime` | `#eaf5d4` | `#222815` |
+| `yellow` | `#f5eed4` | `#2e2714` |
+| `pink` | `#f6d3e2` | `#330f27` |
+| `lavender` | `#e1d4f5` | `#1e0f33` |
+| `sky` | `#d4e7f5` | `#0f2433` |
 
-`pink` uses a saturated tint in dark mode, so its row shows the most color there. The cost is fainter borders and a toggle knob that is harder to see.
+Each color passes the desktop app's own contrast check, so the app paints it.
 
 ## Known limits
 
-- In light mode, the warning fill and the git status colors have lower contrast on the tinted page than on the app's stock page. They still paint.
-- In dark mode, the selected row cannot be made brighter than the app's stock gray row. Any color is darker than white at the same 15% strength.
+- Some small status colors (the warning fill, git status labels, green "success" text) have lower contrast on tinted backgrounds than on the app's stock ones. They still paint.
+- The selected row's strength is fixed by the app: 10% in light mode, 15% in dark mode. A mod can change the color behind it, not the strength.
 
 ## Change the color
 
 Open the config menu (`/config` in a terminal session) and set **Tint color**. The mod reloads with the new color.
 
-To add a color of your own, add it to `TINTS` in `hooks/register.ts` and to the `options` list in `.claude-plugin/plugin.json`. Use six-digit hex values. For light mode, give three pale shades, darkest first. For dark mode, bright colors keep borders visible.
+To add a color of your own, add an entry to `TINTS` in `hooks/register.ts` and its name to the `options` list in `.claude-plugin/plugin.json`. Each entry needs three pale light-mode shades, four deep dark-mode shades, and three dark-mode text colors, all six-digit hex, darkest shade first. Check it with `checkColors` from `hooks/make-colors.js`: a line that starts `Desktop won't paint this theme` means the app ignores the whole theme.
 
 `hooks/make-colors.js` and `hooks/make-colors.d.ts` are generated from the app's design system. Do not edit them.
 

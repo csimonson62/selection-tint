@@ -1,13 +1,13 @@
 {
   "name": "selection-tint",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "license": "MIT",
-  "description": "Replaces the gray selected sidebar row with a color, in light and dark mode. Eight colors to choose from.",
+  "description": "Tints the app in one of eight colors, in light and dark mode, so the selected sidebar row is no longer gray.",
   "userConfig": {
     "color": {
       "type": "string",
       "title": "Tint color",
-      "description": "The color of the selected sidebar row. In light mode it also tints the app background.",
+      "description": "The color for the app background and the selected sidebar row, in light and dark mode.",
       "default": "cyan",
       "options": ["cyan", "teal", "mint", "lime", "yellow", "pink", "lavender", "sky"]
     }
