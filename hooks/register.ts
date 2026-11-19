@@ -2,7 +2,7 @@ import type { Register, ThemeSetArgs } from 'claude-code'
 
 // Dark mode only. `gray-0` is the gray behind every translucent neutral fill:
 // the selected sidebar row (15%), hover (7.5%), borders (10%). Body text reads
-// `gray-50`, so it keeps the app's own color. Light mode stays the app's.
+// `gray-50`, so it keeps the app's own color.
 //
 // Each tint was checked against the design system's contrast rules. The first
 // five keep borders at the app's own strength; pink, lavender and sky draw
@@ -30,7 +30,9 @@ export const register: Register = (on, options) => {
       v: 1,
       id: 'selection-tint',
       label: 'Selection tint',
-      inputs: { dark: { 'gray-0': tint } },
+      // A theme that names one mode locks the app to that mode. The light half
+      // repeats the app's own value, so light mode still switches and looks stock.
+      inputs: { dark: { 'gray-0': tint }, light: { 'gray-900': '#0b0b0b' } },
     },
   }
 

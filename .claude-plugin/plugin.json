@@ -1,6 +1,6 @@
 {
   "name": "selection-tint",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "description": "Tints the selected sidebar row (and other neutral fills) in dark mode. Eight colors to choose from.",
   "userConfig": {
