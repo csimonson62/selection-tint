@@ -1,5 +1,6 @@
 {
   "name": "selection-tint",
   "owner": { "name": "csimonson62" },
+  "description": "selection-tint: a Claude desktop app mod that tints the app so the selected sidebar row is no longer gray.",
   "plugins": [{ "name": "selection-tint", "source": "./" }]
 }
