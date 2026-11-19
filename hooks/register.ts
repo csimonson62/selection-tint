@@ -1,40 +1,76 @@
 import type { Register, ThemeSetArgs } from 'claude-code'
 
-// Dark mode only. `gray-0` is the gray behind every translucent neutral fill:
-// the selected sidebar row (15%), hover (7.5%), borders (10%). Body text reads
-// `gray-50`, so it keeps the app's own color.
-//
-// Each tint was checked against the design system's contrast rules. The first
-// five keep borders at the app's own strength; pink, lavender and sky draw
-// borders slightly fainter. To add a color, add it here and to `userConfig`
-// in plugin.json (six-digit hex; bright colors keep borders visible).
-const TINTS: Record<string, `#${string}`> = {
-  cyan: '#7df9ff',
-  teal: '#5ef2d6',
-  mint: '#8dffb0',
-  lime: '#c8ff5e',
-  yellow: '#ffd866',
-  pink: '#ffb3d9',
-  lavender: '#d9c2ff',
-  sky: '#9ad4ff',
+import { makeColors } from './make-colors.js'
+
+type Hex = `#${string}`
+
+type Tint = {
+  // Dark mode: the color washed over the selected row at 15%.
+  dark: Hex
+  // Light mode: the page, card and panel colors, darkest first.
+  light: readonly [Hex, Hex, Hex]
 }
 
-const DEFAULT_TINT: `#${string}` = '#7df9ff'
+// How the app paints the selected sidebar row:
+// - Dark mode: a 15% wash of `gray-0` over the sidebar. Body text reads
+//   `gray-50`, so tinting `gray-0` colors the row and leaves text alone.
+// - Light mode: a 10% wash of `gray-900`, which is also the body text color.
+//   Tinting it would color the text. So light mode tints the surfaces
+//   instead: the row is a black wash over a tinted page and takes the page's
+//   hue, and text stays black.
+//
+// Every pair was checked with `checkColors` and has no line that stops the
+// desktop app from painting it. To add a color, add it here and to
+// `userConfig` in plugin.json (six-digit hex).
+const TINTS: Record<string, Tint> = {
+  cyan: { dark: '#7df9ff', light: ['#d4f1f5', '#e0f5f8', '#f0fafb'] },
+  teal: { dark: '#5ef2d6', light: ['#d4f5ee', '#e0f8f3', '#f0fbf9'] },
+  mint: { dark: '#8dffb0', light: ['#d4f5df', '#e0f8e8', '#f0fbf4'] },
+  lime: { dark: '#c8ff5e', light: ['#eaf5d4', '#f0f8e0', '#f8fbf0'] },
+  yellow: { dark: '#ffd866', light: ['#f5eed4', '#f8f3e0', '#fbf9f0'] },
+  pink: { dark: '#ff4da6', light: ['#f6d3e2', '#f9e0eb', '#fdf0f5'] },
+  lavender: { dark: '#d9c2ff', light: ['#e1d4f5', '#eae0f8', '#f5f0fb'] },
+  sky: { dark: '#9ad4ff', light: ['#d4e7f5', '#e0eef8', '#f0f7fb'] },
+}
 
-export const register: Register = (on, options) => {
-  const chosen = typeof options.color === 'string' ? options.color : 'cyan'
-  const tint = TINTS[chosen] ?? DEFAULT_TINT
+const DEFAULT_COLOR = 'cyan'
+const DEFAULT_TINT: Tint = { dark: '#7df9ff', light: ['#d4f1f5', '#e0f5f8', '#f0fafb'] }
 
-  const look: ThemeSetArgs = {
+// The app's own light-mode value, used only if the generator returns no light
+// half. A theme that names one mode locks the app to that mode, so the light
+// half is always given.
+const STOCK_LIGHT = { 'gray-900': '#0b0b0b' } as const
+
+const lookFor = (tint: Tint): ThemeSetArgs => {
+  const [page, card, panel] = tint.light
+  const { theme } = makeColors({
+    label: 'Selection tint',
+    id: 'selection-tint',
+    light: {
+      gray: {
+        anchors: {
+          'surface-0': page,
+          'surface-1': card,
+          'surface-2': panel,
+          'text-primary': '#0b0b0b',
+          'text-secondary': '#2f2f2f',
+          'text-muted': '#474747',
+        },
+      },
+    },
+  })
+
+  return {
     colors: {
-      v: 1,
-      id: 'selection-tint',
-      label: 'Selection tint',
-      // A theme that names one mode locks the app to that mode. The light half
-      // repeats the app's own value, so light mode still switches and looks stock.
-      inputs: { dark: { 'gray-0': tint }, light: { 'gray-900': '#0b0b0b' } },
+      ...theme,
+      inputs: { dark: { 'gray-0': tint.dark }, light: theme.inputs.light ?? STOCK_LIGHT },
     },
   }
+}
+
+export const register: Register = (on, options) => {
+  const chosen = typeof options.color === 'string' ? options.color : DEFAULT_COLOR
+  const look = lookFor(TINTS[chosen] ?? DEFAULT_TINT)
 
   on('session.start', async ($, e, next) => {
     const set = await $.theme.set(look)
