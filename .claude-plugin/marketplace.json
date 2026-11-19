@@ -1,0 +1,5 @@
+{
+  "name": "selection-tint",
+  "owner": { "name": "csimonson62" },
+  "plugins": [{ "name": "selection-tint", "source": "./" }]
+}
