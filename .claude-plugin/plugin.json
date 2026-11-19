@@ -1,5 +1,6 @@
 {
   "name": "selection-tint",
   "version": "0.1.0",
+  "license": "MIT",
   "description": "Tints the selected sidebar row (and other neutral fills) cyan in dark mode."
 }
