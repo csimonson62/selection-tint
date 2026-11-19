@@ -45,6 +45,8 @@ In the desktop app: click **+** next to the prompt box, then **Plugins**. Add th
 
 ## Colors
 
+See all eight in light and dark mode: [Selection Tint Swatches](https://claude.ai/artifact/PSfHxuYbyrJr1vQVC75jUn).
+
 | Name | Light mode page | Dark mode page |
 | --- | --- | --- |
 | `cyan` (default) | `#d4f1f5` | `#142b2e` |
