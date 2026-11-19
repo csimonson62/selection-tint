@@ -64,6 +64,7 @@ Each color passes the desktop app's own contrast check, so the app paints it.
 
 - Some small status colors (the warning fill, git status labels, green "success" text) have lower contrast on tinted backgrounds than on the app's stock ones. They still paint.
 - The selected row's strength is fixed by the app: 10% in light mode, 15% in dark mode. A mod can change the color behind it, not the strength.
+- The tint applies inside sessions only. App-level pages (Search, Artifacts, Plugins) keep the app's own colors, because a mod's theme is set per session.
 
 ## Change the color or mode
 
