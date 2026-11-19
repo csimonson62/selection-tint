@@ -1,6 +1,15 @@
 {
   "name": "selection-tint",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
-  "description": "Tints the selected sidebar row (and other neutral fills) cyan in dark mode."
+  "description": "Tints the selected sidebar row (and other neutral fills) in dark mode. Eight colors to choose from.",
+  "userConfig": {
+    "color": {
+      "type": "string",
+      "title": "Tint color",
+      "description": "The color of the selected sidebar row in dark mode.",
+      "default": "cyan",
+      "options": ["cyan", "teal", "mint", "lime", "yellow", "pink", "lavender", "sky"]
+    }
+  }
 }
